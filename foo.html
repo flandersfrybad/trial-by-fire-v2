@@ -32,4 +32,21 @@
             <input type="submit" value="Submit Article">
         </div>
     </form>
-</<section>
+</section>
+
+<script>
+    document.getElementById('new-article-form').addEventListener('submit', function(event){
+        event.preventDefault(); // Prevents the default form submission action
+
+        var title = document.getElementById('title').value; // Select data inputs
+        var content = document.getElementById('content').value;
+
+        var article = document.createElement('article'); // Create article element
+        article.innerHTML = '<h2 class="red-heading">' + title + '</h2><p>' + content + '</p>';
+
+        document.getElementById('blog-articles').appendChild(article); // Write articel to the HTML
+
+        document.getElementById('title').value = ''; // Clear the form fields
+        document.getElementById('content').value = '';
+    })
+</script>
