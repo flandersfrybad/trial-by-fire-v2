@@ -55,9 +55,10 @@
 
     // --- Function to save articles to localStorage ---
     function saveArticle(title, content) {
-        let articles = getArticles(); // Get existing articles (or an empty array)
-        articles.push({ title: title, content: content }); // Add the new article
-        localStorage.setItem('blogArticles', JSON.stringify(articles)); // Save the updated array
+        let articles = getArticles();
+        let newId = articles.length > 0 ? Math.max(...articles.map(a => a.id)) + 1 : 1; // Generate a unique ID
+        articles.push({ id: newId, title: title, content: content });
+        localStorage.setItem('blogArticles', JSON.stringify(articles));
     }
 
     // --- Function to retrieve articles from localStorage ---
@@ -79,6 +80,7 @@
 
         articles.forEach(function(articleData) {
             var article = document.createElement('article');
+            article.setAttribute('data-id', articleData.id); // Add the ID as a data attribute
             article.innerHTML = '<h2 class="red-heading">' + articleData.title + '</h2><p>' + articleData.content + '</p>';
             blogArticlesContainer.appendChild(article);
         });
