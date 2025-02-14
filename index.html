@@ -35,18 +35,56 @@
 </section>
 
 <script>
-    document.getElementById('new-article-form').addEventListener('submit', function(event){
-        event.preventDefault(); // Prevents the default form submission action
+    document.getElementById('new-article-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevents the default form submission
 
-        var title = document.getElementById('title').value; // Select data inputs
+        var title = document.getElementById('title').value;
         var content = document.getElementById('content').value;
 
-        var article = document.createElement('article'); // Create article element
+        // --- Save to LocalStorage ---
+        saveArticle(title, content);
+
+        // --- Create and append the article (as before) ---
+        var article = document.createElement('article');
         article.innerHTML = '<h2 class="red-heading">' + title + '</h2><p>' + content + '</p>';
+        document.getElementById('blog-articles').appendChild(article);
 
-        document.getElementById('blog-articles').appendChild(article); // Write articel to the HTML
-
-        document.getElementById('title').value = ''; // Clear the form fields
+        document.getElementById('title').value = '';
         document.getElementById('content').value = '';
-    })
+    });
+
+    // --- Function to save articles to localStorage ---
+    function saveArticle(title, content) {
+        let articles = getArticles(); // Get existing articles (or an empty array)
+        articles.push({ title: title, content: content }); // Add the new article
+        localStorage.setItem('blogArticles', JSON.stringify(articles)); // Save the updated array
+    }
+
+    // --- Function to retrieve articles from localStorage ---
+    function getArticles() {
+        let articles;
+        try {
+            articles = JSON.parse(localStorage.getItem('blogArticles')) || [];
+        } catch (error) {
+            console.error("Error parsing articles from localStorage:", error);
+            articles = []; // Ensure we return an array even if there's an error
+        }
+        return articles;
+    }
+
+    // --- Function to load articles on page load ---
+    function loadArticles() {
+        let articles = getArticles();
+        let blogArticlesContainer = document.getElementById('blog-articles');
+
+        articles.forEach(function(articleData) {
+            var article = document.createElement('article');
+            article.innerHTML = '<h2 class="red-heading">' + articleData.title + '</h2><p>' + articleData.content + '</p>';
+            blogArticlesContainer.appendChild(article);
+        });
+    }
+
+    // --- Load articles when the page loads ---
+    window.addEventListener('load', loadArticles);
+
 </script>
